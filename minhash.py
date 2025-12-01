@@ -95,3 +95,51 @@ def find_duplicates_minhash(
     print(f"Tìm được {len(results)} cặp tương tự (ngưỡng: {jaccard_threshold})")
     return results
 
+if __name__ == "__main__":
+    print("="*70)
+    print("TEST MINHASH – PHÁT HIỆN TRÙNG LẶP VĂN BẢN (DỰA TRÊN TỪ NGỮ)")
+    print("="*70)
+
+    # Dữ liệu test đa dạng: trùng 100%, gần giống, khác hoàn toàn
+    test_texts = [
+        "Python là ngôn ngữ lập trình phổ biến nhất hiện nay.",
+        "Python là một ngôn ngữ lập trình rất phổ biến hiện nay.",
+        "Python là ngôn ngữ lập trình phổ biến nhất hiện nay.",  # trùng 100% với dòng 0
+        "Tôi yêu lập trình Python vì nó dễ học và rất mạnh mẽ.",
+        "Tôi rất thích lập trình bằng Python vì nó dễ học và mạnh mẽ.",
+        "Máy học và trí tuệ nhân tạo đang thay đổi thế giới.",
+        "Trí tuệ nhân tạo cùng học máy đang thay đổi thế giới.",
+        "Hà Nội là thủ đô của Việt Nam.",
+        "Thủ đô của Việt Nam chính là Hà Nội.",
+        "Bóng đá là môn thể thao vua được yêu thích nhất trên thế giới.",
+        "Bóng đá được coi là môn thể thao vua và được yêu thích nhất.",
+        "Con mèo đang nằm ngủ trên ghế sofa.",
+        "Con chó sủa rất to khi thấy người lạ.",
+    ]
+
+    print(f"Số văn bản test: {len(test_texts)}\n")
+
+    # Test với nhiều ngưỡng Jaccard khác nhau
+    thresholds = [0.5]
+
+    for th in thresholds:
+        print(f"\n{'='*25} NGƯỠNG JACCARD = {th} {'='*25}")
+        duplicates = find_duplicates_minhash(
+            texts=test_texts,
+            num_perm=128,
+            jaccard_threshold=th,
+            k_shingles=5
+        )
+        
+        if not duplicates:
+            print("Không tìm thấy cặp nào trùng lặp ở ngưỡng này.")
+            continue
+            
+        print(f"→ Tìm thấy {len(duplicates)} cặp (hiển thị tối đa 10 cặp đầu):\n")
+        for rank, (i, j, sim) in enumerate(duplicates[:10], 1):
+            print(f"{rank:2d}. [Jaccard ≈ {sim:.3f}] ID {i:2d} ↔ ID {j:2d}")
+            print(f"    → \"{test_texts[i]}\"")
+            print(f"    → \"{test_texts[j]}\"")
+            print()
+
+    print("\nTEST MINHASH HOÀN TẤT!")

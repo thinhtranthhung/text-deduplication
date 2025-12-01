@@ -66,7 +66,7 @@ def find_duplicates_simhash(
     embeddings: np.ndarray,
     nbits: int = 128,
     bands: int = 8,
-    hamming_threshold: int = 15
+    hamming_threshold: int = 20
 ) -> List[Tuple[int, int, int]]:
     """
     Tìm các cặp văn bản tương tự sử dụng SimHash
@@ -127,3 +127,52 @@ def find_duplicates_simhash(
     
     print(f"Tìm được {len(results)} cặp tương tự (ngưỡng Hamming: {hamming_threshold})")
     return results
+
+if __name__ == "__main__":
+    from embedding import get_embeddings_from_texts
+    
+    print("="*60)
+    print("TEST SIMHASH – PHÁT HIỆN TRÙNG LẶP VĂN BẢN")
+    print("="*60)
+
+    # Dữ liệu test (có cả trùng gần giống và trùng y hệt)
+    test_texts = [
+        "Python là ngôn ngữ lập trình phổ biến nhất hiện nay.",
+        "Python là một ngôn ngữ lập trình rất phổ biến hiện nay.",
+        "Python là ngôn ngữ lập trình phổ biến nhất hiện nay.", 
+        "Máy học là một lĩnh vực quan trọng của trí tuệ nhân tạo.",
+        "Trí tuệ nhân tạo và học máy đang thay đổi thế giới.",
+        "Hà Nội là thủ đô của Việt Nam.",
+        "Thủ đô của Việt Nam chính là Hà Nội.",
+        "Bóng đá là môn thể thao vua được yêu thích nhất.",
+    ]
+
+    print(f"Số văn bản test: {len(test_texts)}\n")
+
+    # Tạo embedding
+    print("Đang tạo embedding bằng all-MiniLM-L6-v2...")
+    embeddings = get_embeddings_from_texts(test_texts)
+    print(f"Embedding shape: {embeddings.shape}\n")
+
+    # Chạy SimHash với các ngưỡng khác nhau để test
+    thresholds = [10, 15, 20]
+    
+    for th in thresholds:
+        print(f"\n{'='*20} NGƯỠNG HAMMING = {th} {'='*20}")
+        duplicates = find_duplicates_simhash(
+            embeddings,
+            nbits=128,
+            bands=8,
+            hamming_threshold=th
+        )
+        
+        if duplicates:
+            for i, j, dist in duplicates[:10]:  # chỉ hiện tối đa 10 cặp
+                print(f"[{dist:2d}] ID {i:2d} ↔ ID {j:2d}")
+                print(f"     → \"{test_texts[i]}\"")
+                print(f"     → \"{test_texts[j]}\"")
+                print()
+        else:
+            print("Không tìm thấy cặp nào trùng lặp với ngưỡng này.")
+    
+    print("\nTEST HOÀN TẤT!")
