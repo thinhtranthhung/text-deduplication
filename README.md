@@ -57,9 +57,9 @@ pip install -r requirements.txt
 
 **Lưu ý:** Thư viện `faiss` được sử dụng là `faiss-cpu` hoặc `faiss-gpu` tùy thuộc vào hệ thống.
 
-## Luồng Xử Lý Chi Tiết (`/api/process`)
+## Luồng Xử Lý Chi Tiết
 
-Pipeline xử lý được thực hiện theo 6 bước chính:
+Pipeline xử lý được thực hiện theo 3 bước chính:
 
 1.  **Tạo Embeddings:** Sử dụng `SentenceTransformer` để tạo ma trận Embeddings (`embedding.py`).
 2.  **Phát hiện Trùng lặp (`find_duplicates_*`):**
