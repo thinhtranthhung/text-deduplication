@@ -123,11 +123,11 @@ def process_clustering(
     """
     
     n_docs = len(texts)
-    print(f"\n🔗 Phân cụm: {n_docs} văn bản, {len(pairs)} cặp tương tự")
+    print(f"\nPhân cụm: {n_docs} văn bản, {len(pairs)} cặp tương tự")
     
     # Phân cụm
     clusters_raw = cluster_documents(pairs, n_docs)
-    print(f"   Tìm được {len(clusters_raw)} cụm trùng lặp")
+    print(f" Tìm được {len(clusters_raw)} cụm trùng lặp")
     
     # Xử lý từng cụm
     clusters_output = {}
@@ -171,7 +171,7 @@ def process_clustering(
         'removal_rate': n_removed / n_docs if n_docs > 0 else 0
     }
     
-    print(f"✓ Thống kê:")
+    print(f" Thống kê:")
     print(f"   - Tổng văn bản: {stats['total_docs']}")
     print(f"   - Số cụm: {stats['n_clusters']}")
     print(f"   - Văn bản bị loại: {stats['n_removed']}")
@@ -184,18 +184,3 @@ def process_clustering(
         'duplicates': sorted(list(all_duplicates)),
         'kept': [i for i in range(n_docs) if i not in all_duplicates]
     }
-
-
-if __name__ == '__main__':
-    # Test
-    test_texts = [
-        "Văn bản 1",
-        "Văn bản 1 sửa đổi",
-        "Văn bản 2",
-        "Văn bản 3"
-    ]
-    
-    test_pairs = [(0, 1, 0.95), (2, 3, 0.88)]
-    
-    result = process_clustering(test_pairs, test_texts, representative_method='shortest')
-    print(f"\nClusters: {len(result['clusters'])}")

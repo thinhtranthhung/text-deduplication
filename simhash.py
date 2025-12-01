@@ -70,33 +70,27 @@ def find_duplicates_simhash(
 ) -> List[Tuple[int, int, int]]:
     """
     Tìm các cặp văn bản tương tự sử dụng SimHash
-    
     Args:
         embeddings: numpy array shape (n_docs, embedding_dim) - float32
         nbits: Số bit của SimHash
         bands: Số band cho LSH (mặc định 8)
         hamming_threshold: Ngưỡng Hamming distance
-    
     Returns:
         List các tuple (doc_id_1, doc_id_2, hamming_distance)
     """
     
-    if embeddings is None or embeddings.size == 0:
-        print("⚠️  Embeddings trống")
-        return []
-    
     n_docs, embedding_dim = embeddings.shape
-    print(f"🔍 SimHash: Xử lý {n_docs} văn bản (nbits={nbits}, bands={bands})")
-    
+    print(f"SimHash: Xử lý {n_docs} văn bản (nbits={nbits}, bands={bands})")
+
     # Tạo hasher
     hasher = SimHasher(dim=embedding_dim, nbits=nbits, seed=42)
     
     # Hash toàn bộ embeddings
-    print("   Bước 1: Hash embeddings...")
+    print("Bước 1: Hash embeddings...")
     hashes = hasher.hash(embeddings.astype(np.float32))  # (n_docs, nbits)
     
     # LSH với bands
-    print("   Bước 2: LSH indexing...")
+    print("Bước 2: LSH indexing...")
     band_width = nbits // bands
     hash_tables = [defaultdict(list) for _ in range(bands)]
     
@@ -110,7 +104,7 @@ def find_duplicates_simhash(
             hash_tables[band_idx][band_hash].append(doc_id)
     
     # Lấy candidate pairs từ LSH
-    print("   Bước 3: Finding candidates...")
+    print("Bước 3: Finding candidates...")
     candidate_pairs = set()
     for band_table in hash_tables:
         for bucket in band_table.values():
@@ -119,7 +113,7 @@ def find_duplicates_simhash(
                     candidate_pairs.add(tuple(sorted(pair)))
     
     # Xác nhận từng cặp
-    print(f"   Bước 4: Verifying {len(candidate_pairs)} candidates...")
+    print(f"Bước 4: Verifying {len(candidate_pairs)} candidates...")
     results = []
     
     for i, j in candidate_pairs:
@@ -131,24 +125,5 @@ def find_duplicates_simhash(
     # Sắp xếp theo Hamming distance tăng dần
     results.sort(key=lambda x: x[2])
     
-    print(f"✓ Tìm được {len(results)} cặp tương tự (ngưỡng Hamming: {hamming_threshold})")
+    print(f"Tìm được {len(results)} cặp tương tự (ngưỡng Hamming: {hamming_threshold})")
     return results
-
-
-if __name__ == '__main__':
-    # Test
-    from embedding import get_embeddings_from_texts
-    
-    test_texts = [
-        "Việt Nam là một nước xã hội chủ nghĩa",
-        "Việt Nam là một nước xã hội chủ nghĩa với thủ đô Hà Nội",
-        "Hà Nội là thủ đô của Việt Nam",
-        "Python là ngôn ngữ lập trình phổ biến",
-    ]
-    
-    embeddings = get_embeddings_from_texts(test_texts)
-    results = find_duplicates_simhash(embeddings, hamming_threshold=20)
-    
-    print("\nKết quả:")
-    for i, j, dist in results:
-        print(f"  ({i}, {j}): Hamming={dist} - '{test_texts[i][:50]}...' <-> '{test_texts[j][:50]}...'")

@@ -8,13 +8,10 @@ import torch
 
 class TextEmbedder:
     """Class để tạo embeddings cho văn bản"""
-    
     _instance = None
-    
     def __init__(self, model_name='all-MiniLM-L6-v2'):
         """
         Khởi tạo model embedding (singleton pattern)
-        
         Args:
             model_name: Tên model từ sentence-transformers
         """
@@ -23,7 +20,7 @@ class TextEmbedder:
             self.model_name = TextEmbedder._instance.model_name
             return
         
-        print(f"📦 Đang tải model {model_name}...")
+        print(f"Đang tải model {model_name}...")
         
         # Thiết lập device
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -33,7 +30,6 @@ class TextEmbedder:
         self.model_name = model_name
         
         TextEmbedder._instance = self
-        print(f"✓ Model {model_name} đã sẵn sàng")
     
     def embed_texts(self, texts, batch_size=64):
         """
@@ -49,10 +45,8 @@ class TextEmbedder:
         if not texts:
             raise ValueError("Danh sách văn bản rỗng")
         
-        if len(texts) > 10000:
-            print(f"⚠️  Cảnh báo: Embedding {len(texts)} văn bản có thể mất nhiều thời gian")
         
-        print(f"📊 Tạo embeddings cho {len(texts)} văn bản (batch_size={batch_size})...")
+        print(f"Tạo embeddings cho {len(texts)} văn bản (batch_size={batch_size})...")
         
         embeddings = self.model.encode(
             texts,
@@ -64,7 +58,7 @@ class TextEmbedder:
         
         embeddings = embeddings.astype(np.float32)
         
-        print(f"✓ Hoàn tất. Shape: {embeddings.shape}")
+        print(f"Hoàn tất. Shape: {embeddings.shape}")
         return embeddings
     
     def get_embedding_dim(self):
@@ -87,15 +81,3 @@ def get_embeddings_from_texts(texts: list, model_name='all-MiniLM-L6-v2', batch_
     embedder = TextEmbedder(model_name)
     return embedder.embed_texts(texts, batch_size)
 
-
-if __name__ == '__main__':
-    # Test
-    test_texts = [
-        "Việt Nam là một nước xã hội chủ nghĩa",
-        "Việt Nam là một nước có thủ đô Hà Nội",
-        "Python là ngôn ngữ lập trình phổ biến"
-    ]
-    
-    embeddings = get_embeddings_from_texts(test_texts)
-    print(f"\nTest embeddings shape: {embeddings.shape}")
-    print(f"Type: {type(embeddings)}, dtype: {embeddings.dtype}")
