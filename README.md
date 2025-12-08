@@ -79,3 +79,9 @@ Dự án này cho phép so sánh rõ ràng hiệu quả, tốc độ, và chi ph
 | **FAISS** | Vector Embedding (Float32) | Cosine Similarity (Inner Product) | Nhanh (với Index ANN) | Cao |
 | **SimHash** | Băm Nhị phân (Bits) | Hamming Distance | Rất nhanh (với LSH) | Phụ thuộc vào số Bits |
 | **MinHash** | Tập Shingle (Text Thô) | Jaccard Similarity | Nhanh (với LSH) | Phụ thuộc vào k-shingles |
+
+
+## Demo Trực Tuyến (Hugging Face Spaces)
+Hệ thống phát hiện trùng lặp này đã được triển khai công khai trên Hugging Face Spaces bằng Docker. Bạn có thể truy cập và chạy thử các thuật toán (FAISS, SimHash, MinHash) trực tiếp qua giao diện web. 
+
+Link Demo Web: https://huggingface.co/spaces/hungth1nh23/text-deduplication
