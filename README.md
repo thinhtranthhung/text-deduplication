@@ -84,4 +84,4 @@ Dự án này cho phép so sánh rõ ràng hiệu quả, tốc độ, và chi ph
 ## Demo Trực Tuyến (Hugging Face Spaces)
 Hệ thống phát hiện trùng lặp này đã được triển khai công khai trên Hugging Face Spaces bằng Docker. Bạn có thể truy cập và chạy thử các thuật toán (FAISS, SimHash, MinHash) trực tiếp qua giao diện web. 
 
-Link Demo Web: https://huggingface.co/spaces/hungth1nh23/text-deduplication
+Link Demo Web: https://hungth1nh23-text-deduplication.hf.space/
